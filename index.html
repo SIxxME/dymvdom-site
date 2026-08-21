@@ -365,6 +365,89 @@
       color:var(--accent);
     }
 
+    /* КЛИКАБЕЛЬНЫЕ АКЦИИ */
+    .promo{
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .promo:active{
+      transform:scale(.985);
+    }
+
+    /* МОДАЛЬНОЕ ОКНО АКЦИИ */
+    .promo-modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:40;
+      background:rgba(0,0,0,.8);
+      backdrop-filter:blur(8px);
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .promo-modal.active{
+      display:flex;
+      animation:promoFade .22s ease;
+    }
+
+    .promo-box{
+      width:min(560px,100%);
+      background:linear-gradient(145deg,#151b0c,#0f1111);
+      border:1px solid rgba(183,255,0,.35);
+      border-radius:26px;
+      padding:30px;
+      position:relative;
+      box-shadow:0 25px 80px rgba(0,0,0,.55);
+      animation:promoUp .28s ease;
+    }
+
+    .promo-box h2{
+      margin:0 40px 14px 0;
+      font-size:30px;
+      line-height:1.05;
+    }
+
+    .promo-box p{
+      margin:0;
+      color:#c6c8c8;
+      line-height:1.7;
+      white-space:pre-line;
+    }
+
+    .promo-close{
+      position:absolute;
+      top:10px;
+      right:14px;
+      border:0;
+      background:none;
+      color:#aaa;
+      font-size:32px;
+      cursor:pointer;
+    }
+
+    .promo-close:hover{
+      color:#fff;
+    }
+
+    @keyframes promoFade{
+      from{opacity:0}
+      to{opacity:1}
+    }
+
+    @keyframes promoUp{
+      from{
+        opacity:0;
+        transform:translateY(18px) scale(.98);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
     /* HOW */
 
     .how{
@@ -848,7 +931,7 @@
 
       <div class="promos">
 
-        <div class="promo">
+        <div class="promo" onclick="openPromo(1)">
 
           <h3>
             ⭐ Отзыв = бесплатные сутки
@@ -863,7 +946,7 @@
         </div>
 
 
-        <div class="promo">
+        <div class="promo" onclick="openPromo(2)">
 
           <h3>
             🌿 3 + 1 в подарок
@@ -879,7 +962,7 @@
         </div>
 
 
-        <div class="promo">
+        <div class="promo" onclick="openPromo(3)">
 
           <h3>
             🌿 6 + 2 в подарок
@@ -895,7 +978,7 @@
         </div>
 
 
-        <div class="promo">
+        <div class="promo" onclick="openPromo(4)">
 
           <h3>
             🔄 Продление — 1 000 ₽
@@ -1088,6 +1171,28 @@
   </footer>
 
 
+  <!-- МОДАЛЬНОЕ ОКНО АКЦИИ -->
+
+  <div class="promo-modal" id="promoModal">
+
+    <div class="promo-box">
+
+      <button
+        class="promo-close"
+        onclick="closePromo()"
+        aria-label="Закрыть"
+      >
+        ×
+      </button>
+
+      <h2 id="promoTitle">Акция</h2>
+      <p id="promoText"></p>
+
+    </div>
+
+  </div>
+
+
   <!-- МОДАЛЬНОЕ ОКНО ЗАКАЗА -->
 
   <div class="modal" id="modal">
@@ -1162,6 +1267,46 @@
 
 
   <script>
+
+    const promoData = {
+      1: {
+        title: "⭐ Отзыв = бесплатные сутки",
+        text: "После аренды оставь отзыв о «Дым в Дом».\n\nВ благодарность добавим +1 бесплатные сутки к следующей аренде.\n\nПодробности и условия уточни при оформлении следующего заказа."
+      },
+      2: {
+        title: "🌿 3 + 1 в подарок",
+        text: "Покупаешь 3 смеси — четвёртая смесь идёт бесплатно.\n\nМожно выбрать вкусы под свой комплект и собрать заказ как удобно."
+      },
+      3: {
+        title: "🌿 6 + 2 в подарок",
+        text: "Покупаешь 6 смесей — 7-я и 8-я идут бесплатно.\n\nОтличный вариант для большой компании или длинного вечера."
+      },
+      4: {
+        title: "🔄 Продление — 1 000 ₽",
+        text: "Понравился кальян и хочется продолжить вечер?\n\nПродли аренду ещё на сутки всего за 1 000 ₽.\n\nСогласуй продление с нами заранее, чтобы кальян можно было оставить у тебя."
+      }
+    };
+
+    function openPromo(number){
+      const promo = promoData[number];
+      if(!promo) return;
+
+      document.getElementById("promoTitle").textContent = promo.title;
+      document.getElementById("promoText").textContent = promo.text;
+      document.getElementById("promoModal").classList.add("active");
+    }
+
+    function closePromo(){
+      document.getElementById("promoModal").classList.remove("active");
+    }
+
+    document
+      .getElementById("promoModal")
+      .addEventListener("click", function(event){
+        if(event.target.id === "promoModal"){
+          closePromo();
+        }
+      });
 
     function openModal(){
       document
