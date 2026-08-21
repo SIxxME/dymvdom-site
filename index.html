@@ -968,26 +968,36 @@
 .tetris-controls{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:9px;
 }
 .tetris-controls button{
-  min-height:42px;
+  min-height:46px;
   border:1px solid #293126;
-  border-radius:12px;
+  border-radius:13px;
   background:#151917;
   color:#ddd;
-  font:900 13px Inter,Arial,sans-serif;
+  font:900 14px Inter,Arial,sans-serif;
   cursor:pointer;
-  transition:.15s;
+  transition:transform .12s, border-color .15s, color .15s, box-shadow .15s;
   touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
 }
 .tetris-controls button:hover{
   border-color:rgba(183,255,0,.55);
   color:var(--accent);
   box-shadow:0 0 18px rgba(183,255,0,.08);
 }
-.tetris-controls button:active{transform:scale(.96)}
-.tetris-controls .wide{grid-column:span 3}
+.tetris-controls button:active{transform:scale(.95)}
+.tetris-controls .wide{grid-column:span 3; min-height:50px}
+.tetris-touch-note{
+  display:none;
+  color:#7d837d;
+  font-size:11px;
+  line-height:1.45;
+  margin:9px 0 0;
+  text-align:center;
+}
 .tetris-hint{
   color:#777;
   font-size:11px;
@@ -1008,18 +1018,52 @@
   .tetris-head{
     align-items:flex-start;
     flex-direction:column;
-    padding:24px 18px 14px;
+    padding:24px 16px 14px;
   }
   .tetris-best{align-self:stretch;text-align:left}
   .tetris-game{
     grid-template-columns:1fr;
-    padding:8px 18px 22px;
+    padding:8px 12px 20px;
+    gap:14px;
   }
-  .tetris-board-wrap{width:min(78vw,300px)}
-  .tetris-side{display:grid;grid-template-columns:1fr 1fr}
-  .tetris-panel:first-child{grid-column:span 2}
-  .tetris-panel:nth-child(2){grid-column:span 2}
-  .tetris-panel:nth-child(3){grid-column:span 2}
+  .tetris-board-wrap{
+    width:min(82vw,300px);
+    padding:7px;
+    border-radius:18px;
+  }
+  .tetris-overlay{inset:7px}
+  .tetris-side{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .tetris-panel:first-child,
+  .tetris-panel:nth-child(2),
+  .tetris-panel:nth-child(3){
+    grid-column:span 2;
+  }
+  #tetrisNext{
+    width:92px;
+    height:92px;
+  }
+  .tetris-controls{
+    gap:8px;
+    max-width:420px;
+    margin:0 auto;
+  }
+  .tetris-controls button{
+    min-height:54px;
+    font-size:17px;
+  }
+  .tetris-controls .wide{
+    min-height:58px;
+    font-size:13px;
+    letter-spacing:.3px;
+  }
+  .tetris-touch-note{
+    display:block;
+  }
+  .tetris-hint{display:none}
 }
 
 
@@ -1063,6 +1107,13 @@
   z-index:1;
 }
 
+
+/* Touch-friendly board */
+#tetrisCanvas{
+  touch-action:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
 </style>
 </head>
 
@@ -2129,6 +2180,51 @@
     }
     if (e.key.toLowerCase() === 'p') togglePause();
   });
+
+  /* Управление пальцами:
+     свайп влево/вправо — движение,
+     свайп вниз — ускорение,
+     быстрый вертикальный свайп вниз — DROP,
+     тап — поворот. */
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+
+  canvas.addEventListener('touchstart', e => {
+    if (!running || paused) return;
+    const t = e.changedTouches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    touchStartTime = performance.now();
+    e.preventDefault();
+  }, {passive:false});
+
+  canvas.addEventListener('touchend', e => {
+    if (!running || paused) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dt = performance.now() - touchStartTime;
+    const ax = Math.abs(dx);
+    const ay = Math.abs(dy);
+
+    if (ax < 18 && ay < 18 && dt < 260) {
+      turn();
+    } else if (ax > ay && ax > 22) {
+      const count = Math.max(1, Math.min(3, Math.round(ax / 52)));
+      for (let i=0; i<count; i++) move(dx > 0 ? 1 : -1);
+    } else if (ay > 24) {
+      if (dy > 0 && ay > 120) hardDrop();
+      else if (dy > 0) {
+        const steps = Math.max(1, Math.min(5, Math.round(ay / 38)));
+        for (let i=0; i<steps; i++) drop();
+      } else {
+        turn();
+      }
+    }
+    draw();
+    e.preventDefault();
+  }, {passive:false});
 
   /* Первый экран */
   board = emptyBoard();
