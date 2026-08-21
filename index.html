@@ -593,12 +593,14 @@
       }
     }
 
+
     /* ПЛАВНАЯ АНИМАЦИЯ ПОЯВЛЕНИЯ */
     .reveal{
       opacity:0;
       transform:translateY(35px);
       transition:opacity .8s ease, transform .8s ease;
     }
+
     .reveal.show{
       opacity:1;
       transform:translateY(0);
@@ -609,6 +611,7 @@
     .instruction-card{
       transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
     }
+
     .card:hover,
     .promo:hover,
     .instruction-card:hover{
@@ -620,6 +623,7 @@
     .visual img{
       transition:transform 1.2s ease;
     }
+
     .visual:hover img{
       transform:scale(1.04);
     }
@@ -627,37 +631,39 @@
     section{
       scroll-margin-top:90px;
     }
-  .fire{
-  display:inline-block;
-  transform-origin:center bottom;
-  animation:fireBurn 1.1s ease-in-out infinite;
-  filter:drop-shadow(0 0 6px rgba(255,120,0,.65));
-}
 
-@keyframes fireBurn{
-  0%,100%{
-    transform:rotate(-4deg) scale(1);
-    filter:drop-shadow(0 0 5px rgba(255,120,0,.55));
-  }
+    /* ЖИВОЙ ОГОНЬ */
+    .fire{
+      display:inline-block;
+      transform-origin:center bottom;
+      animation:fireBurn 1.1s ease-in-out infinite;
+      filter:drop-shadow(0 0 6px rgba(255,120,0,.65));
+    }
 
-  25%{
-    transform:rotate(3deg) scale(1.06);
-    filter:drop-shadow(0 0 10px rgba(255,140,0,.8));
-  }
+    @keyframes fireBurn{
+      0%,100%{
+        transform:rotate(-4deg) scale(1);
+        filter:drop-shadow(0 0 5px rgba(255,120,0,.55));
+      }
 
-  50%{
-    transform:rotate(-2deg) scale(.98);
-    filter:drop-shadow(0 0 7px rgba(255,90,0,.65));
-  }
+      25%{
+        transform:rotate(3deg) scale(1.06);
+        filter:drop-shadow(0 0 10px rgba(255,140,0,.8));
+      }
 
-   75%{
-    transform:rotate(4deg) scale(1.05);
-    filter:drop-shadow(0 0 12px rgba(255,150,0,.85));
-  }
-}
-</style>
+      50%{
+        transform:rotate(-2deg) scale(.98);
+        filter:drop-shadow(0 0 7px rgba(255,90,0,.65));
+      }
+
+      75%{
+        transform:rotate(4deg) scale(1.05);
+        filter:drop-shadow(0 0 12px rgba(255,150,0,.85));
+      }
+    }
+  </style>
 </head>
-  
+
 <body>
 
   <!-- HEADER -->
@@ -832,9 +838,9 @@
 
     <section id="promo" class="container reveal">
 
-     <h2 class="title">
-  Акции <span class="fire">🔥</span>
-</h2>
+      <h2 class="title">
+        Акции <span class="fire">🔥</span>
+      </h2>
 
       <p class="sub">
         Чем чаще отдыхаешь — тем больше получаешь.
@@ -1221,8 +1227,10 @@
 
   </script>
 
+
   <script>
     const reveals = document.querySelectorAll('.reveal');
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
