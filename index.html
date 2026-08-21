@@ -592,6 +592,41 @@
         font-size:34px;
       }
     }
+
+    /* ПЛАВНАЯ АНИМАЦИЯ ПОЯВЛЕНИЯ */
+    .reveal{
+      opacity:0;
+      transform:translateY(35px);
+      transition:opacity .8s ease, transform .8s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .card,
+    .promo,
+    .instruction-card{
+      transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+    }
+    .card:hover,
+    .promo:hover,
+    .instruction-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(183,255,0,.4);
+      box-shadow:0 15px 40px rgba(0,0,0,.35);
+    }
+
+    .visual img{
+      transition:transform 1.2s ease;
+    }
+    .visual:hover img{
+      transform:scale(1.04);
+    }
+
+    section{
+      scroll-margin-top:90px;
+    }
   </style>
 </head>
 
@@ -672,7 +707,7 @@
 
     <!-- ЦЕНЫ -->
 
-    <section id="price" class="container">
+    <section id="price" class="container reveal">
 
       <h2 class="title">
         Цены
@@ -767,7 +802,7 @@
 
     <!-- АКЦИИ -->
 
-    <section id="promo" class="container">
+    <section id="promo" class="container reveal">
 
       <h2 class="title">
         Акции 🔥
@@ -848,7 +883,7 @@
 
     <!-- ИНСТРУКЦИЯ -->
 
-    <section id="instruction" class="container">
+    <section id="instruction" class="container reveal">
 
       <div class="instruction-wrap">
 
@@ -889,7 +924,7 @@
 
     <!-- КАК ЭТО РАБОТАЕТ -->
 
-    <section id="how" class="container">
+    <section id="how" class="container reveal">
 
       <h2 class="title">
         Как это работает?
@@ -1156,6 +1191,20 @@
 
       });
 
+  </script>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach((element) => observer.observe(element));
   </script>
 
 </body>
