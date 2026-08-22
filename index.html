@@ -1027,9 +1027,17 @@
     gap:14px;
   }
   .tetris-board-wrap{
-    width:min(82vw,300px);
+    height:min(56vh,460px);
+    width:auto;
+    aspect-ratio:1 / 2;
     padding:7px;
     border-radius:18px;
+  }
+  .tetris-board-wrap #tetrisCanvas{
+    width:100%;
+    height:100%;
+    display:block;
+    aspect-ratio:1 / 2;
   }
   .tetris-overlay{inset:7px}
   .tetris-side{
@@ -1037,14 +1045,21 @@
     grid-template-columns:1fr 1fr;
     gap:10px;
   }
-  .tetris-panel:first-child,
-  .tetris-panel:nth-child(2),
-  .tetris-panel:nth-child(3){
+  .tetris-panel:first-child{
     grid-column:span 2;
   }
+  .tetris-panel:nth-child(2){
+    grid-column:span 2;
+    padding:12px;
+  }
+  .tetris-panel:nth-child(3){
+    grid-column:span 2;
+    padding:12px;
+  }
   #tetrisNext{
-    width:92px;
-    height:92px;
+    width:72px;
+    height:72px;
+    margin:auto;
   }
   .tetris-controls{
     gap:8px;
@@ -1064,6 +1079,29 @@
     display:block;
   }
   .tetris-hint{display:none}
+  .tetris-stat{
+    padding:10px 12px;
+  }
+  .tetris-stat small{
+    font-size:8px;
+  }
+  .tetris-stat b{
+    font-size:18px;
+  }
+  .tetris-controls{
+    grid-template-columns:repeat(3,1fr);
+    max-width:380px;
+  }
+  .tetris-controls button{
+    min-height:48px;
+  }
+  .tetris-controls .wide{
+    min-height:50px;
+    font-size:12px;
+  }
+  .tetris-brand{
+    display:none;
+  }
 }
 
 
@@ -2197,6 +2235,10 @@
     touchStartY = t.clientY;
     touchStartTime = performance.now();
     e.preventDefault();
+  }, {passive:false});
+
+  canvas.addEventListener('touchmove', e => {
+    if (running && !paused) e.preventDefault();
   }, {passive:false});
 
   canvas.addEventListener('touchend', e => {
