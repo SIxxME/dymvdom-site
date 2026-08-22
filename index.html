@@ -965,45 +965,6 @@
   border-radius:12px;
   background:#080a08;
 }
-.tetris-controls{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:9px;
-}
-.tetris-controls button{
-  min-height:46px;
-  border:1px solid #293126;
-  border-radius:13px;
-  background:#151917;
-  color:#ddd;
-  font:900 14px Inter,Arial,sans-serif;
-  cursor:pointer;
-  transition:transform .12s, border-color .15s, color .15s, box-shadow .15s;
-  touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-}
-.tetris-controls button:hover{
-  border-color:rgba(183,255,0,.55);
-  color:var(--accent);
-  box-shadow:0 0 18px rgba(183,255,0,.08);
-}
-.tetris-controls button:active{transform:scale(.95)}
-.tetris-controls .wide{grid-column:span 3; min-height:50px}
-.tetris-touch-note{
-  display:none;
-  color:#7d837d;
-  font-size:11px;
-  line-height:1.45;
-  margin:9px 0 0;
-  text-align:center;
-}
-.tetris-hint{
-  color:#777;
-  font-size:11px;
-  line-height:1.5;
-  margin:0;
-}
 .tetris-brand{
   margin-top:auto;
   padding-top:3px;
@@ -1061,24 +1022,6 @@
     height:72px;
     margin:auto;
   }
-  .tetris-controls{
-    gap:8px;
-    max-width:420px;
-    margin:0 auto;
-  }
-  .tetris-controls button{
-    min-height:54px;
-    font-size:17px;
-  }
-  .tetris-controls .wide{
-    min-height:58px;
-    font-size:13px;
-    letter-spacing:.3px;
-  }
-  .tetris-touch-note{
-    display:block;
-  }
-  .tetris-hint{display:none}
   .tetris-stat{
     padding:10px 12px;
   }
@@ -1088,19 +1031,26 @@
   .tetris-stat b{
     font-size:18px;
   }
-  .tetris-controls{
-    grid-template-columns:repeat(3,1fr);
-    max-width:380px;
-  }
-  .tetris-controls button{
-    min-height:48px;
-  }
-  .tetris-controls .wide{
-    min-height:50px;
-    font-size:12px;
-  }
   .tetris-brand{
     display:none;
+  }
+  .tetris-mobile-guide{
+    grid-column:span 2;
+    padding:12px;
+  }
+  .tetris-swipe-guide{
+    gap:7px;
+  }
+  .tetris-swipe-guide > div{
+    min-height:60px;
+    padding:8px;
+  }
+  .tetris-swipe-guide b{
+    min-width:38px;
+    font-size:14px;
+  }
+  .tetris-swipe-guide span{
+    font-size:9px;
   }
 }
 
@@ -1152,6 +1102,37 @@
   -webkit-user-select:none;
   user-select:none;
 }
+
+.tetris-mobile-guide{
+  padding:16px;
+}
+.tetris-swipe-guide{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+.tetris-swipe-guide > div{
+  min-height:68px;
+  padding:10px;
+  border:1px solid #202620;
+  border-radius:13px;
+  background:#0f120f;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.tetris-swipe-guide b{
+  min-width:44px;
+  color:var(--accent);
+  font-size:16px;
+  text-align:center;
+}
+.tetris-swipe-guide span{
+  color:#888e88;
+  font-size:10px;
+  line-height:1.35;
+}
+
 </style>
 </head>
 
@@ -1583,7 +1564,7 @@
             <div class="tetris-overlay show" id="tetrisOverlay">
               <div class="tetris-overlay-card">
                 <strong id="tetrisOverlayTitle">ACID TETRIS</strong>
-                <p id="tetrisOverlayText">Собирай линии. Чем дольше живёшь — тем быстрее падает.</p>
+                <p id="tetrisOverlayText">Тап — повернуть · свайп влево/вправо — двигать · свайп вниз — ускорить · длинный свайп вниз — DROP.</p>
                 <button class="btn btn-primary" id="tetrisStart">Начать игру</button>
               </div>
             </div>
@@ -1604,18 +1585,26 @@
               <canvas id="tetrisNext" width="110" height="110"></canvas>
             </div>
     
-            <div class="tetris-panel">
-              <div class="tetris-controls">
-                <button data-action="left" aria-label="Влево">←</button>
-                <button data-action="rotate" aria-label="Повернуть">↻</button>
-                <button data-action="right" aria-label="Вправо">→</button>
-                <button data-action="down" aria-label="Ускорить падение">↓</button>
-                <button data-action="drop" class="wide">DROP · ПРОБЕЛ</button>
+            <div class="tetris-panel tetris-mobile-guide">
+              <div class="tetris-next-title">КАК ИГРАТЬ</div>
+              <div class="tetris-swipe-guide">
+                <div>
+                  <b>← →</b>
+                  <span>свайп влево / вправо<br>двигать фигуру</span>
+                </div>
+                <div>
+                  <b>↻</b>
+                  <span>тап по полю<br>повернуть</span>
+                </div>
+                <div>
+                  <b>↓</b>
+                  <span>свайп вниз<br>ускорить падение</span>
+                </div>
+                <div>
+                  <b>DROP</b>
+                  <span>длинный свайп вниз<br>уронить сразу</span>
+                </div>
               </div>
-              <p class="tetris-hint">
-                Клавиатура: ← → — движение · ↑ — поворот · ↓ — ускорение · Space — сброс.
-                На телефоне используй кнопки.
-              </p>
             </div>
     
             <div class="tetris-brand">КИСЛОТНЫЙ <span>ЗЕЛЁНЫЙ</span> · БЕЗ БИБЛИОТЕК</div>
@@ -2179,18 +2168,7 @@
     draw();
     requestAnimationFrame(loop);
   }
-
-  document.querySelectorAll('.tetris-controls button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const action = btn.dataset.action;
-      if (action === 'left') move(-1);
-      if (action === 'right') move(1);
-      if (action === 'rotate') turn();
-      if (action === 'down') drop();
-      if (action === 'drop') hardDrop();
-      draw();
-    });
-  });
+});
 
   $('tetrisStart').addEventListener('click', () => {
     if (paused) {
